@@ -42,7 +42,7 @@ struct ContentView: View {
     
     var body: some View {
         NavigationStack {
-            List {
+            List {  
                 ForEach(expenses.items) { item in
                     HStack {
                         VStack(alignment: .leading) {
@@ -54,7 +54,8 @@ struct ContentView: View {
                         
                         Spacer()
                         
-                        Text(item.amount, format: .currency(code: "USD"))
+                        Text(item.amount, format: .currency(code: Locale.current.currency?.identifier ?? "USD"))
+                            .font(fontForAmount(item.amount))
                     }
                 }
                 .onDelete(perform: removeItems)
@@ -71,8 +72,19 @@ struct ContentView: View {
         }
     }
     
-    func removeItems(at offsets: IndexSet) {
+    private func removeItems(at offsets: IndexSet) {
         expenses.items.remove(atOffsets: offsets)
+    }
+    
+    private func fontForAmount(_ amount: Double) -> Font {
+        switch amount {
+        case 0..<1000:
+            return .system(.subheadline, design: .monospaced, weight: .light)
+        case 1000..<10000:
+            return .system(.headline, design: .monospaced, weight: .regular)
+        default:
+            return .system(.headline, design: .monospaced, weight: .semibold)
+        }
     }
 }
 
