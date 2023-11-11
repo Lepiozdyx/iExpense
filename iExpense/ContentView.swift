@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct ExpenseItem: Identifiable, Codable {
+struct ExpenseItem: Identifiable, Codable, Equatable {
     var id = UUID()
     let name: String
     let type: String
@@ -26,7 +26,10 @@ final class Expenses {
     
     init() {
         if let savedItems = UserDefaults.standard.data(forKey: "Items") {
-            if let decodedItems = try? JSONDecoder().decode([ExpenseItem].self, from: savedItems) {
+            if let decodedItems = try? JSONDecoder().decode(
+                [ExpenseItem].self,
+                from: savedItems
+            ) {
                 items = decodedItems
                 return
             }
@@ -40,26 +43,48 @@ struct ContentView: View {
     @State private var expenses = Expenses()
     @State private var showingAddExpense = false
     
+    private var personalExpenses: [ExpenseItem] {
+        expenses.items.filter { $0.type == "Personal" }
+    }
+    
+    private var businessExpenses: [ExpenseItem] {
+        expenses.items.filter { $0.type == "Business" }
+    }
+    
     var body: some View {
         NavigationStack {
-            List {  
-                ForEach(expenses.items) { item in
-                    HStack {
-                        VStack(alignment: .leading) {
-                            Text(item.name)
-                                .font(.title2)
-                            
-                            Text(item.type)
-                                .foregroundStyle(item.type == "Personal" ? .gray : .teal)
-                        }
-                        
-                        Spacer()
-                        
-                        Text(item.amount, format: .currency(code: Locale.current.currency?.identifier ?? "USD"))
-                            .font(fontForAmount(item.amount))
+            List {
+                Section(!personalExpenses.isEmpty 
+                            ? "Personal expenses"
+                            : "There will be your personal expenses.."
+                ) {
+                    ForEach(personalExpenses) { item in
+                        ExpensesRowView(
+                            item: item,
+                            color: .gray,
+                            font: fontForAmount(item.amount)
+                        )
+                    }
+                    .onDelete { offsets in
+                        removeItems(at: offsets, from: "Personal")
                     }
                 }
-                .onDelete(perform: removeItems)
+                
+                Section(!businessExpenses.isEmpty 
+                            ? "Business expenses"
+                            : "There will be your business expenses.."
+                ) {
+                    ForEach(businessExpenses) { item in
+                        ExpensesRowView(
+                            item: item,
+                            color: .teal,
+                            font: fontForAmount(item.amount)
+                        )
+                    }
+                    .onDelete { offsets in
+                        removeItems(at: offsets, from: "Business")
+                    }
+                }
             }
             .navigationTitle("iExpense")
             .toolbar {
@@ -73,18 +98,23 @@ struct ContentView: View {
         }
     }
     
-    private func removeItems(at offsets: IndexSet) {
-        expenses.items.remove(atOffsets: offsets)
+    private func removeItems(at offsets: IndexSet, from type: String) {
+        let itemsToRemove = type == "Personal" ? personalExpenses : businessExpenses
+        for offset in offsets {
+            if let index = expenses.items.firstIndex(of: itemsToRemove[offset]) {
+                expenses.items.remove(at: index)
+            }
+        }
     }
     
     private func fontForAmount(_ amount: Double) -> Font {
         return switch amount {
         case 0..<1000:
-             .system(.subheadline, design: .monospaced, weight: .light)
+                .system(.subheadline, design: .monospaced, weight: .light)
         case 1000..<10000:
-             .system(.headline, design: .monospaced, weight: .regular)
+                .system(.headline, design: .monospaced, weight: .regular)
         default:
-             .system(.headline, design: .monospaced, weight: .semibold)
+                .system(.headline, design: .monospaced, weight: .semibold)
         }
     }
 }
