@@ -15,7 +15,7 @@ struct ExpenseItem: Identifiable, Codable {
 }
 
 @Observable
-class Expenses {
+final class Expenses {
     var items: [ExpenseItem] = [] {
         didSet {
             if let encoded = try? JSONEncoder().encode(items) {
@@ -47,9 +47,10 @@ struct ContentView: View {
                     HStack {
                         VStack(alignment: .leading) {
                             Text(item.name)
-                                .font(.title)
+                                .font(.title2)
                             
                             Text(item.type)
+                                .foregroundStyle(item.type == "Personal" ? .gray : .teal)
                         }
                         
                         Spacer()
@@ -77,13 +78,13 @@ struct ContentView: View {
     }
     
     private func fontForAmount(_ amount: Double) -> Font {
-        switch amount {
+        return switch amount {
         case 0..<1000:
-            return .system(.subheadline, design: .monospaced, weight: .light)
+             .system(.subheadline, design: .monospaced, weight: .light)
         case 1000..<10000:
-            return .system(.headline, design: .monospaced, weight: .regular)
+             .system(.headline, design: .monospaced, weight: .regular)
         default:
-            return .system(.headline, design: .monospaced, weight: .semibold)
+             .system(.headline, design: .monospaced, weight: .semibold)
         }
     }
 }
