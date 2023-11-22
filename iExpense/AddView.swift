@@ -20,7 +20,7 @@ struct AddView: View {
     var body: some View {
         NavigationStack {
             Form {
-                TextField("Name", text: $name)
+                TextField("Name of expense..", text: $name)
                 
                 Picker("Type", selection: $type) {
                     ForEach(types, id: \.self) {
