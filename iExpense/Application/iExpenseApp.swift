@@ -9,9 +9,12 @@ import SwiftUI
 
 @main
 struct iExpenseApp: App {
+    @StateObject private var viewModel = ExpensesViewModel()
+    
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .environmentObject(viewModel)
         }
     }
 }

@@ -9,26 +9,22 @@ import SwiftUI
 
 struct AddView: View {
     @Environment(\.dismiss) var dismiss
-    
-    @State private var name = ""
-    @State private var type = "Personal"
-    @State private var amount = 0.0
+    @EnvironmentObject var viewModel: ExpensesViewModel
     
     let types = ["Personal", "Business"]
-    var expenses: Expenses
     
     var body: some View {
         NavigationStack {
             Form {
-                TextField("Name of expense..", text: $name)
+                TextField("Name of expense..", text: $viewModel.name)
                 
-                Picker("Type", selection: $type) {
+                Picker("Type", selection: $viewModel.type) {
                     ForEach(types, id: \.self) {
                         Text($0)
                     }
                 }
                 
-                TextField("Amount", value: $amount, format: .currency(code: Locale.current.currency?.identifier ?? "USD"))
+                TextField("Amount", value: $viewModel.amount, format: .currency(code: Locale.current.currency?.identifier ?? "USD"))
                     .keyboardType(.decimalPad)
             }
             .navigationTitle("Add new expense")
@@ -40,11 +36,10 @@ struct AddView: View {
                 
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Save") {
-                        let item = ExpenseItem(name: name, type: type, amount: amount)
-                        expenses.items.append(item)
+                        viewModel.saveNewExpenses()
                         dismiss()
                     }
-                    .disabled(name.isEmpty)
+                    .disabled(viewModel.isDisable())
                 }
             }
         }
@@ -52,5 +47,6 @@ struct AddView: View {
 }
 
 #Preview {
-    AddView(expenses: Expenses())
+    AddView()
+        .environmentObject(ExpensesViewModel())
 }
