@@ -6,13 +6,15 @@
 //
 
 import SwiftUI
+import Observation
 
-final class ExpensesViewModel: ObservableObject {
-    @Published var expenses = Expenses()
-    @Published var showingAddExpense = false
-    @Published var name = ""
-    @Published var type = "Personal"
-    @Published var amount = 0.0
+@Observable 
+final class ExpensesViewModel {
+    var expenses = Expenses()
+    var showingAddExpense = false
+    var name = ""
+    var type = "Personal"
+    var amount = 0.0
     
     var personalExpenses: [ExpenseItem] {
         expenses.items.filter { $0.type == "Personal" }

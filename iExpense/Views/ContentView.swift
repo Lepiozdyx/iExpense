@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct ContentView: View {
-    @EnvironmentObject var viewModel: ExpensesViewModel
+    @State var viewModel = ExpensesViewModel()
     
     var body: some View {
         NavigationStack {
@@ -52,7 +52,7 @@ struct ContentView: View {
                 }
             }
             .sheet(isPresented: $viewModel.showingAddExpense) {
-                AddView()
+                AddView(viewModel: viewModel)
             }
         }
     }
@@ -71,5 +71,4 @@ struct ContentView: View {
 
 #Preview {
     ContentView()
-        .environmentObject(ExpensesViewModel())
 }

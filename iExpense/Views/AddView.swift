@@ -9,7 +9,7 @@ import SwiftUI
 
 struct AddView: View {
     @Environment(\.dismiss) var dismiss
-    @EnvironmentObject var viewModel: ExpensesViewModel
+    @Bindable var viewModel: ExpensesViewModel
     
     let types = ["Personal", "Business"]
     
@@ -47,6 +47,5 @@ struct AddView: View {
 }
 
 #Preview {
-    AddView()
-        .environmentObject(ExpensesViewModel())
+    AddView(viewModel: ExpensesViewModel())
 }

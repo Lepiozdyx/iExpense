@@ -8,9 +8,9 @@
 import SwiftUI
 
 struct ExpensesRowView: View {
-    var item: ExpenseItem
-    var color: Color
-    var font: Font
+    let item: ExpenseItem
+    let color: Color
+    let font: Font
     
     var body: some View {
         HStack {
