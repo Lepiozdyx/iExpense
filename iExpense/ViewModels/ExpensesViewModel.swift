@@ -10,7 +10,7 @@ import Observation
 
 @Observable 
 final class ExpensesViewModel {
-    var expenses = Expenses()
+    let expenses = Expenses()
     var showingAddExpense = false
     var name = ""
     var type = "Personal"
