@@ -5,29 +5,18 @@
 //  Created by Alex on 22.11.2023.
 //
 
-import Foundation
+import SwiftUI
+import SwiftData
 
-@Observable
+@Model
 final class Expenses {
-    var items: [ExpenseItem] = [] {
-        didSet {
-            if let encoded = try? JSONEncoder().encode(items) {
-                UserDefaults.standard.setValue(encoded, forKey: "Items")
-            }
-        }
-    }
+    var name: String
+    var type: String
+    var amount: Double
     
-    init() {
-        if let savedItems = UserDefaults.standard.data(forKey: "Items") {
-            if let decodedItems = try? JSONDecoder().decode(
-                [ExpenseItem].self,
-                from: savedItems
-            ) {
-                items = decodedItems
-                return
-            }
-        }
-        
-        items = []
+    init(name: String, type: String, amount: Double) {
+        self.name = name
+        self.type = type
+        self.amount = amount
     }
 }

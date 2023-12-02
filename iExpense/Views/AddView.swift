@@ -6,46 +6,39 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct AddView: View {
-    @Environment(\.dismiss) var dismiss
-    @Bindable var viewModel: ExpensesViewModel
+    @Bindable var expense: Expenses
     
     let types = ["Personal", "Business"]
     
     var body: some View {
-        NavigationStack {
             Form {
-                TextField("Name of expense..", text: $viewModel.name)
+                TextField("Name of expense..", text: $expense.name)
                 
-                Picker("Type", selection: $viewModel.type) {
+                Picker("Type", selection: $expense.type) {
                     ForEach(types, id: \.self) {
                         Text($0)
                     }
                 }
                 
-                TextField("Amount", value: $viewModel.amount, format: .currency(code: Locale.current.currency?.identifier ?? "USD"))
+                TextField("Amount", value: $expense.amount, format: .currency(code: Locale.current.currency?.identifier ?? "USD"))
                     .keyboardType(.decimalPad)
             }
             .navigationTitle("Add new expense")
-            .toolbar {
-                ToolbarItem(placement: .cancellationAction) {
-                    Button("Close", role: .cancel, action: { dismiss() })
-                        .foregroundStyle(.red)
-                }
-                
-                ToolbarItem(placement: .confirmationAction) {
-                    Button("Save") {
-                        viewModel.saveNewExpenses()
-                        dismiss()
-                    }
-                    .disabled(viewModel.isDisable())
-                }
-            }
-        }
+            .navigationBarTitleDisplayMode(.inline)
     }
 }
 
 #Preview {
-    AddView(viewModel: ExpensesViewModel())
+    do {
+        let config = ModelConfiguration(isStoredInMemoryOnly: true)
+        let container = try ModelContainer(for: Expenses.self, configurations: config)
+        let example = Expenses(name: "", type: "Personal", amount: 0)
+        return AddView(expense: example)
+            .modelContainer(container)
+    } catch {
+        return Text("Failed to create preview: \(error.localizedDescription)")
+    }
 }
