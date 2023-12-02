@@ -9,6 +9,7 @@ import SwiftUI
 import SwiftData
 
 struct AddView: View {
+    @Environment(\.modelContext) var modelContext
     @Bindable var expense: Expenses
     
     let types = ["Personal", "Business"]
@@ -16,6 +17,9 @@ struct AddView: View {
     var body: some View {
             Form {
                 TextField("Name of expense..", text: $expense.name)
+                    .onChange(of: expense.name) {
+                        expense.isModified = true
+                    }
                 
                 Picker("Type", selection: $expense.type) {
                     ForEach(types, id: \.self) {
@@ -28,6 +32,11 @@ struct AddView: View {
             }
             .navigationTitle("Add new expense")
             .navigationBarTitleDisplayMode(.inline)
+            .onDisappear {
+                if !expense.isModified {
+                    modelContext.delete(expense)
+                }
+            }
     }
 }
 

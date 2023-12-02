@@ -20,7 +20,7 @@ struct ContentView: View {
                     NavigationLink(value: expense) {
                         ExpensesRowView(
                             expense: expense,
-                            color: .gray,
+                            color: expense.type == "Personal" ? .gray : .cyan,
                             font: fontForAmount(expense.amount)
                         )
                     }
