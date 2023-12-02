@@ -8,30 +8,30 @@
 import SwiftUI
 
 struct ExpensesRowView: View {
-    let item: ExpenseItem
+    let expense: Expenses
     let color: Color
     let font: Font
     
     var body: some View {
         HStack {
             VStack(alignment: .leading) {
-                Text(item.name)
+                Text(expense.name)
                     .font(.title2)
                 
-                Text(item.type)
+                Text(expense.type)
                     .foregroundStyle(color)
             }
             
             Spacer()
             
-            Text(item.amount, format: .currency(code: Locale.current.currency?.identifier ?? "USD"))
+            Text(expense.amount, format: .currency(code: Locale.current.currency?.identifier ?? "USD"))
                 .font(font)
         }
     }
 }
 
 #Preview {
-    ExpensesRowView(item: ExpenseItem(
+    ExpensesRowView(expense: Expenses(
         name: "Lunch",
         type: "Business",
         amount: 599

@@ -6,54 +6,45 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct ContentView: View {
-    @State private var viewModel = ExpensesViewModel()
+    @Environment(\.modelContext) var modelContext
+    @State private var path: [Expenses] = []
+    @Query(sort: \Expenses.type) var expenses: [Expenses]
     
     var body: some View {
-        NavigationStack {
+        NavigationStack(path: $path) {
             List {
-                Section(!viewModel.personalExpenses.isEmpty
-                            ? "Personal expenses"
-                            : "There will be your personal expenses.."
-                ) {
-                    ForEach(viewModel.personalExpenses) { item in
+                ForEach(expenses) { expense in
+                    NavigationLink(value: expense) {
                         ExpensesRowView(
-                            item: item,
+                            expense: expense,
                             color: .gray,
-                            font: fontForAmount(item.amount)
+                            font: fontForAmount(expense.amount)
                         )
                     }
-                    .onDelete { offsets in
-                        viewModel.removeItems(at: offsets, from: "Personal")
-                    }
                 }
-                
-                Section(!viewModel.businessExpenses.isEmpty
-                            ? "Business expenses"
-                            : "There will be your business expenses.."
-                ) {
-                    ForEach(viewModel.businessExpenses) { item in
-                        ExpensesRowView(
-                            item: item,
-                            color: .teal,
-                            font: fontForAmount(item.amount)
-                        )
-                    }
-                    .onDelete { offsets in
-                        viewModel.removeItems(at: offsets, from: "Business")
-                    }
-                }
+                .onDelete(perform: deleteExpense)
             }
             .navigationTitle("iExpense")
+            .navigationDestination(for: Expenses.self) { expense in
+                AddView(expense: expense)
+            }
             .toolbar {
                 Button("Add Expense", systemImage: "plus") {
-                    viewModel.showingAddExpense = true
+                    let expense = Expenses(name: "", type: "Personal", amount: 0)
+                    modelContext.insert(expense)
+                    path = [expense]
                 }
             }
-            .sheet(isPresented: $viewModel.showingAddExpense) {
-                AddView(viewModel: viewModel)
-            }
+        }
+    }
+    
+    private func deleteExpense(at offsets: IndexSet) {
+        for offset in offsets {
+            let expense = expenses[offset]
+            modelContext.delete(expense)
         }
     }
     
