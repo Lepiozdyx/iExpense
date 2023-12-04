@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		FA39D8AB2B1E047200F62546 /* ExpensesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA39D8AA2B1E047200F62546 /* ExpensesView.swift */; };
 		FA47702C2B0E7ED60086F808 /* Expenses.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA47702B2B0E7ED60086F808 /* Expenses.swift */; };
 		FA6FEC2C2AFFBD4E006E848D /* ExpensesRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FA6FEC2B2AFFBD4E006E848D /* ExpensesRowView.swift */; };
 		FAF0D97B2AFD0B61005B7DD3 /* iExpenseApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAF0D97A2AFD0B61005B7DD3 /* iExpenseApp.swift */; };
@@ -17,6 +18,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		FA39D8AA2B1E047200F62546 /* ExpensesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpensesView.swift; sourceTree = "<group>"; };
 		FA47702B2B0E7ED60086F808 /* Expenses.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Expenses.swift; sourceTree = "<group>"; };
 		FA6FEC2B2AFFBD4E006E848D /* ExpensesRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpensesRowView.swift; sourceTree = "<group>"; };
 		FAF0D9772AFD0B61005B7DD3 /* iExpense.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = iExpense.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -75,6 +77,7 @@
 		FAF0D96E2AFD0B61005B7DD3 = {
 			isa = PBXGroup;
 			children = (
+				FA39D8AA2B1E047200F62546 /* ExpensesView.swift */,
 				FAF0D9792AFD0B61005B7DD3 /* iExpense */,
 				FAF0D9782AFD0B61005B7DD3 /* Products */,
 			);
@@ -179,6 +182,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				FAF0D97D2AFD0B61005B7DD3 /* ContentView.swift in Sources */,
+				FA39D8AB2B1E047200F62546 /* ExpensesView.swift in Sources */,
 				FAF0D97B2AFD0B61005B7DD3 /* iExpenseApp.swift in Sources */,
 				FA47702C2B0E7ED60086F808 /* Expenses.swift in Sources */,
 				FA6FEC2C2AFFBD4E006E848D /* ExpensesRowView.swift in Sources */,

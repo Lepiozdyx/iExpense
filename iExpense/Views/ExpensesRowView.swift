@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct ExpensesRowView: View {
     let expense: Expenses
@@ -19,6 +20,7 @@ struct ExpensesRowView: View {
                     .font(.title2)
                 
                 Text(expense.type)
+                    .font(.subheadline)
                     .foregroundStyle(color)
             }
             
@@ -31,9 +33,13 @@ struct ExpensesRowView: View {
 }
 
 #Preview {
-    ExpensesRowView(expense: Expenses(
-        name: "Lunch",
-        type: "Business",
-        amount: 599
-    ), color: .gray, font: .body)
+    do {
+        let config = ModelConfiguration(isStoredInMemoryOnly: true)
+        let container = try ModelContainer(for: Expenses.self, configurations: config)
+        let example = Expenses(name: "Lunch", type: "Business", amount: 511.99)
+        return ExpensesRowView(expense: example, color: .cyan, font: .headline)
+            .modelContainer(container)
+    } catch {
+        return Text("Failed to create preview: \(error.localizedDescription)")
+    }
 }

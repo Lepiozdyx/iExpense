@@ -13,6 +13,7 @@ final class Expenses {
     var name: String
     var type: String
     var amount: Double
+    var isModified = false
     
     init(name: String, type: String, amount: Double) {
         self.name = name
