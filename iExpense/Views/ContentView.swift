@@ -8,54 +8,44 @@
 import SwiftUI
 import SwiftData
 
+enum ExpensesType: String, CaseIterable {
+    case personal = "Personal"
+    case business = "Business"
+    case all = "All"
+}
+
 struct ContentView: View {
     @Environment(\.modelContext) var modelContext
     @State private var path: [Expenses] = []
-    @Query(sort: \Expenses.type) var expenses: [Expenses]
+    @State private var showingType: ExpensesType = .all
     
     var body: some View {
         NavigationStack(path: $path) {
-            List {
-                ForEach(expenses) { expense in
-                    NavigationLink(value: expense) {
-                        ExpensesRowView(
-                            expense: expense,
-                            color: expense.type == "Personal" ? .gray : .cyan,
-                            font: fontForAmount(expense.amount)
-                        )
-                    }
-                }
-                .onDelete(perform: deleteExpense)
-            }
+            ExpensesView(type: showingType)
             .navigationTitle("iExpense")
             .navigationDestination(for: Expenses.self) { expense in
                 AddView(expense: expense)
             }
             .toolbar {
-                Button("Add Expense", systemImage: "plus") {
-                    let expense = Expenses(name: "", type: "Personal", amount: 0)
-                    modelContext.insert(expense)
-                    path = [expense]
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button("Add Expense", systemImage: "plus") {
+                        let expense = Expenses(name: "", type: "Personal", amount: 0)
+                        modelContext.insert(expense)
+                        path = [expense]
+                    }
+                }
+                
+                ToolbarItem(placement: .topBarLeading) {
+                    Menu("Sort", systemImage: "line.3.horizontal.decrease.circle") {
+                        Picker("Types", selection: $showingType) {
+                            ForEach(ExpensesType.allCases, id: \.self) { type in
+                                Text(type.rawValue)
+                                    .tag(type)
+                            }
+                        }
+                    }
                 }
             }
-        }
-    }
-    
-    private func deleteExpense(at offsets: IndexSet) {
-        for offset in offsets {
-            let expense = expenses[offset]
-            modelContext.delete(expense)
-        }
-    }
-    
-    private func fontForAmount(_ amount: Double) -> Font {
-        return switch amount {
-        case 0..<1000:
-                .system(.subheadline, design: .monospaced, weight: .light)
-        case 1000..<10000:
-                .system(.headline, design: .monospaced, weight: .regular)
-        default:
-                .system(.headline, design: .monospaced, weight: .semibold)
         }
     }
 }
