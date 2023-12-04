@@ -27,14 +27,14 @@ struct ExpensesView: View {
         }
     }
     
-    init(type: ExpensesType) {
+    init(type: ExpensesType, sortOrder: [SortDescriptor<Expenses>]) {
         switch type {
         case .personal:
-            _expenses = Query(filter: #Predicate<Expenses> { $0.type == "Personal" }, sort: \Expenses.name)
+            _expenses = Query(filter: #Predicate<Expenses> { $0.type == "Personal" }, sort: sortOrder)
         case .business:
-            _expenses = Query(filter: #Predicate<Expenses> { $0.type == "Business" }, sort: \Expenses.name)
+            _expenses = Query(filter: #Predicate<Expenses> { $0.type == "Business" }, sort: sortOrder)
         case .all:
-            _expenses = Query(sort: \Expenses.name)
+            _expenses = Query(sort: sortOrder)
         }
     }
     
@@ -58,5 +58,5 @@ struct ExpensesView: View {
 }
 
 #Preview {
-    ExpensesView(type: ExpensesType.all)
+    ExpensesView(type: ExpensesType.all, sortOrder: [SortDescriptor(\Expenses.name)])
 }

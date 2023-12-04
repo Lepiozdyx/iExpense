@@ -18,10 +18,15 @@ struct ContentView: View {
     @Environment(\.modelContext) var modelContext
     @State private var path: [Expenses] = []
     @State private var showingType: ExpensesType = .all
+    @State private var sortOrder = [
+        SortDescriptor(\Expenses.type),
+        SortDescriptor(\Expenses.name),
+        SortDescriptor(\Expenses.amount)
+    ]
     
     var body: some View {
         NavigationStack(path: $path) {
-            ExpensesView(type: showingType)
+            ExpensesView(type: showingType, sortOrder: sortOrder)
             .navigationTitle("iExpense")
             .navigationDestination(for: Expenses.self) { expense in
                 AddView(expense: expense)
