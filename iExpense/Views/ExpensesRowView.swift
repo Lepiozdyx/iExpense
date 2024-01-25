@@ -29,6 +29,9 @@ struct ExpensesRowView: View {
             Text(expense.amount, format: .currency(code: Locale.current.currency?.identifier ?? "USD"))
                 .font(font)
         }
+        .accessibilityElement()
+        .accessibilityLabel("\(expense.name), \(expense.amount, format: .currency(code: Locale.current.currency?.identifier ?? "USD"))")
+        .accessibilityHint("Type: \(expense.type)")
     }
 }
 
